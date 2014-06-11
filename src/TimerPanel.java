@@ -24,13 +24,15 @@ public class TimerPanel extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		x += 10;
-		if (x == 260) {
-			t.stop();
-			System.exit(0);
+		if (e.getSource() == t) {
+			x += 10;
+			repaint();
+			if (x == 260) {
+				t.stop();
+				System.exit(0);
+			}
 		}
-		repaint();
 	}
 }
