@@ -1,38 +1,37 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
-public class TimerPanel extends JPanel implements ActionListener {
+public class TimerPanel extends JPanel {
 	private Timer t;
-	int x;
+	private int posX;
+
+	public Timer getT() {
+		return t;
+	}
+
+	public void setT(Timer t) {
+		this.t = t;
+	}
+
+	public int getPosX() {
+		return posX;
+	}
+
+	public void setPosX(int posX) {
+		this.posX = posX;
+	}
 
 	TimerPanel() {
-		t = new Timer(200, this);
-		x = 0;
-		t.start();
+		posX = 0;
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		g.fillRect(x, 80, 40, 40);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if (e.getSource() == t) {
-			x += 10;
-			repaint();
-			if (x == 260) {
-				t.stop();
-				System.exit(0);
-			}
-		}
+		g.fillRect(posX, 80, 40, 40);
 	}
 }
