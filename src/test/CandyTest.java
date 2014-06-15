@@ -1,6 +1,7 @@
 package test;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,6 +73,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		homePanel = new JPanel();
 		homePanel.add(homeBtn1);
 		homeIcon.setIcon(new ImageIcon("image/icon06.png"));
+		// homeIcon.setIcon(new ImageIcon(getClass().getResource("/image/icon06.png")));
 		homeIcon.setBounds(0, 0, 256, 256);
 		homePanel.add(homeIcon);
 		homeBtn1.addActionListener(this);
@@ -168,11 +170,15 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 					// + cLast.getLocation().y / grid);
 					// Point p = cLast.getLocation();
 					// System.out.println(p.x + " " + p.y);
-					cLast.setForeground(Color.RED);
+					//cLast.setForeground(Color.RED);
+					Graphics g = cLast.getGraphics();
+					g.setColor(Color.RED);
+					g.drawRect((int) (grid*0.1),(int) (grid*0.1),(int) (grid*0.8),(int) (grid*0.8));
 					Candy.setPress(true);
 				}
 			} else {
-				cLast.setForeground(Color.BLACK);
+				//cLast.setForeground(Color.BLACK);
+				cLast.repaint();
 				Candy.setPress(false);
 				c = (Candy) arg0.getSource();
 				if (!c.isBlock() && c.isBehind(cLast)) {

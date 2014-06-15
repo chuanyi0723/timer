@@ -1,10 +1,10 @@
 package test;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Polygon;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 @SuppressWarnings("serial")
@@ -14,7 +14,7 @@ public class Candy extends JLabel {
 	private static boolean press = false;
 	private static int grid;
 
-	//Icon icon0 = new ImageIcon("image/icon06.png");
+	// Icon icon0 = new ImageIcon("image/icon06.png");
 
 	public int getType() {
 		return type;
@@ -47,38 +47,6 @@ public class Candy extends JLabel {
 	public Candy(int type, int x, int y) {
 		this.type = type;
 		setDel(false);
-		setOpaque(true);
-		switch (type) {
-		case -1:
-			setText("X");
-			setBackground(Color.BLACK);
-			break;
-		case 0:
-			setText("0");
-			setBackground(Color.BLUE);
-			//setIcon(icon0);
-			break;
-		case 1:
-			setText("1");
-			setBackground(Color.RED);
-			break;
-		case 2:
-			setText("2");
-			setBackground(Color.GREEN);
-			break;
-		case 3:
-			setText("3");
-			setBackground(Color.ORANGE);
-			break;
-		case 4:
-			setText("4");
-			setBackground(Color.YELLOW);
-			break;
-		case 5:
-			setText("5");
-			setBackground(Color.CYAN);
-			break;
-		}
 		setBounds(x * grid, y * grid, grid, grid);
 	}
 
@@ -94,5 +62,69 @@ public class Candy extends JLabel {
 		Point p = getLocation();
 		Point pc = c.getLocation();
 		return Math.abs(p.x - pc.x) + Math.abs(p.y - pc.y) == grid;
+	}
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		switch (type) {
+		case 0:
+			g.setColor(Color.BLUE);
+			g.fillRect((int) (grid * 0.2), (int) (grid * 0.2),
+					(int) (grid * 0.6), (int) (grid * 0.6));
+			break;
+		case 1:
+			g.setColor(Color.RED);
+			g.fillOval((int) (grid * 0.2), (int) (grid * 0.2),
+					(int) (grid * 0.6), (int) (grid * 0.6));
+			break;
+		case 2:
+			Polygon polygon1 = new Polygon();
+			g.setColor(Color.GREEN);
+			polygon1.addPoint((int) (grid * 0.5), (int) (grid * 0.1));
+			polygon1.addPoint((int) (grid * 0.1), (int) (grid * 0.8));
+			polygon1.addPoint((int) (grid * 0.9), (int) (grid * 0.8));
+			// g.drawPolygon(polygon1);
+			g.fillPolygon(polygon1);
+			break;
+		case 3:
+			Polygon polygon2 = new Polygon();
+			g.setColor(Color.ORANGE);
+			polygon2.addPoint((int) (grid * 0.3), (int) (grid * 0.15));
+			polygon2.addPoint((int) (grid * 0.7), (int) (grid * 0.15));
+			polygon2.addPoint((int) (grid * 0.9), (int) (grid * 0.5));
+			polygon2.addPoint((int) (grid * 0.7), (int) (grid * 0.85));
+			polygon2.addPoint((int) (grid * 0.3), (int) (grid * 0.85));
+			polygon2.addPoint((int) (grid * 0.1), (int) (grid * 0.5));
+			// g.drawPolygon(polygon2);
+			g.fillPolygon(polygon2);
+			break;
+		case 4:
+			Polygon polygon3 = new Polygon();
+			g.setColor(Color.YELLOW);
+			polygon3.addPoint((int) (grid * 0.5), (int) (grid * 0.15));
+			polygon3.addPoint((int) (grid * 0.6), (int) (grid * 0.35));
+			polygon3.addPoint((int) (grid * 0.9), (int) (grid * 0.35));
+			polygon3.addPoint((int) (grid * 0.7), (int) (grid * 0.58));
+			polygon3.addPoint((int) (grid * 0.8), (int) (grid * 0.85));
+			polygon3.addPoint((int) (grid * 0.5), (int) (grid * 0.75));
+			polygon3.addPoint((int) (grid * 0.2), (int) (grid * 0.85));
+			polygon3.addPoint((int) (grid * 0.3), (int) (grid * 0.58));
+			polygon3.addPoint((int) (grid * 0.1), (int) (grid * 0.35));
+			polygon3.addPoint((int) (grid * 0.4), (int) (grid * 0.35));
+			// g.drawPolygon(polygon3);
+			g.fillPolygon(polygon3);
+			break;
+		case 5:
+			Polygon polygon4 = new Polygon();
+			g.setColor(Color.CYAN);
+			polygon4.addPoint((int) (grid * 0.5), (int) (grid * 0.15));
+			polygon4.addPoint((int) (grid * 0.9), (int) (grid * 0.35));
+			polygon4.addPoint((int) (grid * 0.8), (int) (grid * 0.85));
+			polygon4.addPoint((int) (grid * 0.2), (int) (grid * 0.85));
+			polygon4.addPoint((int) (grid * 0.1), (int) (grid * 0.35));
+			// g.drawPolygon(polygon4);
+			g.fillPolygon(polygon4);
+			break;
+		}
 	}
 }
