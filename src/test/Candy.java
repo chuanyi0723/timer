@@ -14,8 +14,6 @@ public class Candy extends JLabel {
 	private static boolean press = false;
 	private static int grid;
 
-	// Icon icon0 = new ImageIcon("image/icon06.png");
-
 	public int getType() {
 		return type;
 	}
@@ -95,7 +93,6 @@ public class Candy extends JLabel {
 			polygon2.addPoint((int) (grid * 0.7), (int) (grid * 0.85));
 			polygon2.addPoint((int) (grid * 0.3), (int) (grid * 0.85));
 			polygon2.addPoint((int) (grid * 0.1), (int) (grid * 0.5));
-			// g.drawPolygon(polygon2);
 			g.fillPolygon(polygon2);
 			break;
 		case 4:
@@ -111,7 +108,6 @@ public class Candy extends JLabel {
 			polygon3.addPoint((int) (grid * 0.3), (int) (grid * 0.58));
 			polygon3.addPoint((int) (grid * 0.1), (int) (grid * 0.35));
 			polygon3.addPoint((int) (grid * 0.4), (int) (grid * 0.35));
-			// g.drawPolygon(polygon3);
 			g.fillPolygon(polygon3);
 			break;
 		case 5:
@@ -122,7 +118,6 @@ public class Candy extends JLabel {
 			polygon4.addPoint((int) (grid * 0.8), (int) (grid * 0.85));
 			polygon4.addPoint((int) (grid * 0.2), (int) (grid * 0.85));
 			polygon4.addPoint((int) (grid * 0.1), (int) (grid * 0.35));
-			// g.drawPolygon(polygon4);
 			g.fillPolygon(polygon4);
 			break;
 		}

@@ -1,6 +1,7 @@
 package test;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -14,12 +15,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class CandyTest extends JFrame implements ActionListener, MouseListener {
 	JPanel homePanel;
-	JPanel gamePanel;
+	GamePanel gamePanel;
 	final int type = 6;
 	final int width = 9;
 	final int height = 9;
@@ -68,12 +70,13 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		setTitle("CandyTest");
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(500, 700);
+		setSize(500, 660);
 		setLocationRelativeTo(null);
 		homePanel = new JPanel();
 		homePanel.add(homeBtn1);
 		homeIcon.setIcon(new ImageIcon("image/icon06.png"));
-		// homeIcon.setIcon(new ImageIcon(getClass().getResource("/image/icon06.png")));
+		// homeIcon.setIcon(new
+		// ImageIcon(getClass().getResource("/image/icon06.png")));
 		homeIcon.setBounds(0, 0, 256, 256);
 		homePanel.add(homeIcon);
 		homeBtn1.addActionListener(this);
@@ -83,14 +86,23 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		homeBtn2.setActionCommand("exit");
 		homePanel.setBounds(0, 0, 500, 700);
 		add(homePanel);
-		gamePanel = new JPanel();
-		gamePanel.setLayout(null);
 		Candy.setGrid(grid);
-		stageLabel.setBounds(50, 510, 200, 50);
-		scoreLabel.setBounds(50, 560, 200, 50);
-		goalLabel.setBounds(50, 610, 400, 50);
-		stepLabel.setBounds(300, 560, 200, 50);
-		gameBtn.setBounds(300, 610, 100, 50);
+		gamePanel = new GamePanel(this);
+		Font f1 = new Font("Arial", Font.BOLD, 24);
+		Font f2 = new Font("Arial", Font.BOLD, 16);
+		stageLabel.setFont(f1);
+		stageLabel.setBounds(5, 510, 160, 30);
+		stageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		scoreLabel.setFont(f2);
+		scoreLabel.setBounds(335, 590, 160, 30);
+		scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		goalLabel.setFont(f2);
+		goalLabel.setBounds(5, 590, 160, 30);
+		goalLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		stepLabel.setFont(f2);
+		stepLabel.setBounds(170, 590, 160, 30);
+		stepLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		gameBtn.setBounds(365, 510, 100, 30);
 		gameBtn.addActionListener(this);
 		gameBtn.setActionCommand("pause");
 		gamePanel.add(stageLabel);
@@ -98,7 +110,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		gamePanel.add(stepLabel);
 		gamePanel.add(scoreLabel);
 		gamePanel.add(gameBtn);
-		gamePanel.setBounds(0, 0, 500, 700);
+		gamePanel.setBounds(0, 0, 500, 660);
 		gameStart();
 		// add(gamePanel);
 	}
@@ -108,7 +120,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		StageSetting s = new StageSetting(n);
 		categories = s.getCategories();
 		goal = s.getGoalGrade();
-		goalLabel.setText("Goal: " + goal);
+		goalLabel.setText(String.valueOf(goal));
 		initStep = s.getInitStep();
 		mark = s.getMark();
 	}
@@ -132,11 +144,11 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 			erase();
 		} while (!hasMove());
 		score = 0;
-		scoreLabel.setText("Score: " + score);
+		scoreLabel.setText(String.valueOf(score));
 		step = initStep;
-		stepLabel.setText("Move: " + step);
-		stageLabel.setText("Stage: " + stage);
-		goalLabel.setText("Goal: " + goal);
+		stepLabel.setText(String.valueOf(step));
+		stageLabel.setText("Stage " + stage);
+		goalLabel.setText(String.valueOf(goal));
 		gamePanel.repaint();
 	}
 
@@ -170,14 +182,15 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 					// + cLast.getLocation().y / grid);
 					// Point p = cLast.getLocation();
 					// System.out.println(p.x + " " + p.y);
-					//cLast.setForeground(Color.RED);
+					// cLast.setForeground(Color.RED);
 					Graphics g = cLast.getGraphics();
 					g.setColor(Color.RED);
-					g.drawRect((int) (grid*0.1),(int) (grid*0.1),(int) (grid*0.8),(int) (grid*0.8));
+					g.drawRect((int) (grid * 0.1), (int) (grid * 0.1),
+							(int) (grid * 0.8), (int) (grid * 0.8));
 					Candy.setPress(true);
 				}
 			} else {
-				//cLast.setForeground(Color.BLACK);
+				// cLast.setForeground(Color.BLACK);
 				cLast.repaint();
 				Candy.setPress(false);
 				c = (Candy) arg0.getSource();
@@ -272,7 +285,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 						// System.out.println(60 * (eliminate - 2) * base); //
 						// score
 						score += 60 * (eliminate - 2) * base;
-						scoreLabel.setText("Score: " + score);
+						scoreLabel.setText(String.valueOf(score));
 						chain = true;
 					}
 				}
@@ -296,7 +309,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 						// System.out.println(60 * (eliminate - 2) * base); //
 						// score
 						score += 60 * (eliminate - 2) * base;
-						scoreLabel.setText("Score: " + score);
+						scoreLabel.setText(String.valueOf(score));
 						chain = true;
 					}
 				}
@@ -413,7 +426,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		dy = (y1 - y2) / grid * 5;
 		timer.start();
 	}
-	
+
 	int dir;
 
 	public void invalidMove(Candy c1, Candy c2) {
@@ -516,7 +529,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 				candies[x2 / grid][y2 / grid] = to;
 				timer.stop();
 				step--;
-				stepLabel.setText("Move: " + step);
+				stepLabel.setText(String.valueOf(step));
 				erase();
 				if (step <= 0) {
 					String msg;
