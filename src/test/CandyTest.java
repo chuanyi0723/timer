@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -70,21 +71,28 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		setTitle("CandyTest");
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(500, 660);
+		setSize(600, 660);
 		setLocationRelativeTo(null);
 		homePanel = new JPanel();
-		homePanel.add(homeBtn1);
+		homePanel.setLayout(null);
+		homePanel.setBounds(50, 0, 500, 630);
 		homeIcon.setIcon(new ImageIcon("image/icon06.png"));
 		// homeIcon.setIcon(new
 		// ImageIcon(getClass().getResource("/image/icon06.png")));
-		homeIcon.setBounds(0, 0, 256, 256);
-		homePanel.add(homeIcon);
+		homeIcon.setBounds(122, 5, 256, 256);
+		homeBtn1.setBounds(210, 265, 80, 30);
+		homeBtn1.setBackground(Color.PINK);
 		homeBtn1.addActionListener(this);
+		homeBtn1.setMnemonic(KeyEvent.VK_S);
 		homeBtn1.setActionCommand("start");
-		homePanel.add(homeBtn2);
+		homeBtn2.setBounds(210, 300, 80, 30);
+		homeBtn2.setBackground(Color.PINK);
+		homeBtn2.setMnemonic(KeyEvent.VK_E);
 		homeBtn2.addActionListener(this);
 		homeBtn2.setActionCommand("exit");
-		homePanel.setBounds(0, 0, 500, 700);
+		homePanel.add(homeIcon);
+		homePanel.add(homeBtn1);
+		homePanel.add(homeBtn2);
 		add(homePanel);
 		Candy.setGrid(grid);
 		gamePanel = new GamePanel(this);
@@ -102,7 +110,10 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		stepLabel.setFont(f2);
 		stepLabel.setBounds(170, 590, 160, 30);
 		stepLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		gameBtn.setBounds(365, 510, 100, 30);
+		gameBtn.setBounds(375, 510, 80, 30);
+		gameBtn.setForeground(Color.WHITE);
+		gameBtn.setBackground(Color.BLACK);
+		gameBtn.setMnemonic(KeyEvent.VK_P);
 		gameBtn.addActionListener(this);
 		gameBtn.setActionCommand("pause");
 		gamePanel.add(stageLabel);
@@ -110,7 +121,6 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		gamePanel.add(stepLabel);
 		gamePanel.add(scoreLabel);
 		gamePanel.add(gameBtn);
-		gamePanel.setBounds(0, 0, 500, 660);
 		gameStart();
 		// add(gamePanel);
 	}
@@ -448,6 +458,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 	int d;
 
 	public void drop(Candy c1, Candy c2) {
+		// TODO
 		timer = new Timer(20, this);
 		timer.setActionCommand("drop");
 		from = c1;
@@ -473,13 +484,15 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		} else if (arg0.getActionCommand().equals("exit")) {
 			int choose = JOptionPane.showConfirmDialog(this, "Are you sure?",
 					"Exit", JOptionPane.YES_NO_OPTION);
-			if (choose == JOptionPane.OK_OPTION)
+			if (choose == JOptionPane.YES_OPTION)
 				System.exit(0);
 		} else if (arg0.getActionCommand().equals("pause")) {
 			String[] options = { "Resume", "Restart", "Exit" };
-			int x = JOptionPane.showOptionDialog(this, "Please select one:",
-					"Input", JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+			JLabel msg = new JLabel("Game pause");
+			msg.setHorizontalAlignment(SwingConstants.CENTER);
+			int x = JOptionPane.showOptionDialog(this, msg, "Pause",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+					null, options, options[2]);
 			if (x == JOptionPane.YES_OPTION) {
 			} else if (x == JOptionPane.NO_OPTION)
 				restart();
@@ -532,10 +545,12 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 				stepLabel.setText(String.valueOf(step));
 				erase();
 				if (step <= 0) {
-					String msg;
+					JLabel msg;
 					if (score >= goal) {
-						msg = "Clear " + score;
-						JOptionPane.showMessageDialog(this, msg);
+						msg = new JLabel("Your score: " + score);
+						msg.setHorizontalAlignment(SwingConstants.CENTER);
+						JOptionPane.showMessageDialog(this, msg, "Clear",
+								JOptionPane.PLAIN_MESSAGE);
 						if (stage < finalStage)
 							loadStage(stage + 1);
 						else
@@ -543,9 +558,9 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 						if (stage <= finalStage)
 							restart();
 					} else {
-						msg = "Challenge again?";
+						msg = new JLabel("Challenge again?");
 						int choose = JOptionPane.showConfirmDialog(this, msg,
-								"Fail!", JOptionPane.YES_NO_OPTION);
+								"Fail", JOptionPane.YES_NO_OPTION);
 						switch (choose) {
 						case JOptionPane.YES_OPTION:
 							restart();
