@@ -17,7 +17,7 @@ public class GamePanel extends JPanel {
 	public GamePanel(CandyTest frame) {
 		this.frame = frame;
 		setLayout(null);
-		setBounds(50, 0, frame.grid * frame.width, 630);
+		setBounds(50, 0, frame.grid * frame.width, frame.getHeight() - 30);
 		setBackground(bg);
 		Font f = new Font("Arial", Font.BOLD, 24);
 		JLabel l1 = new JLabel("Target");
@@ -38,8 +38,8 @@ public class GamePanel extends JPanel {
 	}
 
 	// setting for frame.grid = 55
-	int b = 6;
-	int c = 11;
+	int b = 6; // must even
+	int c = 11; // frame.grid % c must be 0
 	int b2 = b / 2;
 	int a = c - b2;
 

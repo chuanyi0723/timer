@@ -75,17 +75,17 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		setLocationRelativeTo(null);
 		homePanel = new JPanel();
 		homePanel.setLayout(null);
-		homePanel.setBounds(50, 0, 500, 630);
+		homePanel.setBounds(50, 0, 500, getHeight() - 30);
 		homeIcon.setIcon(new ImageIcon("image/icon06.png"));
 		// homeIcon.setIcon(new
 		// ImageIcon(getClass().getResource("/image/icon06.png")));
 		homeIcon.setBounds(122, 5, 256, 256);
-		homeBtn1.setBounds(210, 265, 80, 30);
+		homeBtn1.setBounds(200, 265, 100, 30);
 		homeBtn1.setBackground(Color.PINK);
 		homeBtn1.addActionListener(this);
 		homeBtn1.setMnemonic(KeyEvent.VK_S);
 		homeBtn1.setActionCommand("start");
-		homeBtn2.setBounds(210, 300, 80, 30);
+		homeBtn2.setBounds(200, 300, 100, 30);
 		homeBtn2.setBackground(Color.PINK);
 		homeBtn2.setMnemonic(KeyEvent.VK_E);
 		homeBtn2.addActionListener(this);
@@ -479,6 +479,8 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		// TODO Auto-generated method stub
 		if (arg0.getActionCommand().equals("start")) {
 			remove(homePanel);
+			homeBtn1.setText("Continue");
+			homeBtn1.setMnemonic(KeyEvent.VK_C);
 			add(gamePanel);
 			gamePanel.repaint();
 		} else if (arg0.getActionCommand().equals("exit")) {
@@ -487,7 +489,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 			if (choose == JOptionPane.YES_OPTION)
 				System.exit(0);
 		} else if (arg0.getActionCommand().equals("pause")) {
-			String[] options = { "Resume", "Restart", "Exit" };
+			String[] options = { "Resume", "Restart", "Home" };
 			JLabel msg = new JLabel("Game pause");
 			msg.setHorizontalAlignment(SwingConstants.CENTER);
 			int x = JOptionPane.showOptionDialog(this, msg, "Pause",
@@ -567,6 +569,10 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 							break;
 						case JOptionPane.NO_OPTION:
 							remove(gamePanel);
+							homeBtn1.setText("Start");
+							homeBtn1.setMnemonic(KeyEvent.VK_S);
+							loadStage(0);
+							restart();
 							add(homePanel);
 							homePanel.repaint();
 							break;
