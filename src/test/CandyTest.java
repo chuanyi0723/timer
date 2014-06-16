@@ -76,9 +76,9 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		homePanel = new JPanel();
 		homePanel.setLayout(null);
 		homePanel.setBounds(50, 0, 500, getHeight() - 30);
-		homeIcon.setIcon(new ImageIcon("image/icon06.png"));
-		// homeIcon.setIcon(new
-		// ImageIcon(getClass().getResource("/image/icon06.png")));
+		// homeIcon.setIcon(new ImageIcon("image/icon06.png"));
+		homeIcon.setIcon(new ImageIcon(getClass().getResource(
+				"/image/icon06.png")));
 		homeIcon.setBounds(122, 5, 256, 256);
 		homeBtn1.setBounds(190, 265, 120, 30);
 		homeBtn1.setBackground(Color.PINK);
