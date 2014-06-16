@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
@@ -23,7 +22,7 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class CandyTest extends JFrame implements ActionListener, MouseListener {
-	ResourceBundle rb = ResourceBundle.getBundle("message", Locale.TAIWAN);	
+	ResourceBundle rb = ResourceBundle.getBundle("message");	
 	JPanel homePanel;
 	GamePanel gamePanel;
 	final int type = 6;
@@ -82,7 +81,7 @@ public class CandyTest extends JFrame implements ActionListener, MouseListener {
 		homePanel.setBounds(50, 0, 500, getHeight() - 30);
 		// homeIcon.setIcon(new ImageIcon("image/icon06.png"));
 		homeIcon.setIcon(new ImageIcon(getClass().getResource(
-				"/image/icon06.png")));
+				"/images/icon06.png")));
 		homeIcon.setBounds(122, 5, 256, 256);
 		homeBtn1.setBounds(190, 265, 120, 30);
 		homeBtn1.setBackground(Color.PINK);
