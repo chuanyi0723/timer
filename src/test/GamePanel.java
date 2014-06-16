@@ -3,6 +3,7 @@ package test;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,15 +21,15 @@ public class GamePanel extends JPanel {
 		setBounds(50, 0, frame.grid * frame.width, frame.getHeight() - 30);
 		setBackground(bg);
 		Font f = new Font("Arial", Font.BOLD, 24);
-		JLabel l1 = new JLabel("Target");
+		JLabel l1 = new JLabel(frame.rb.getString("target"));
 		l1.setFont(f);
 		l1.setHorizontalAlignment(SwingConstants.CENTER);
 		l1.setBounds(5, 550, 160, 30);
-		JLabel l2 = new JLabel("Moves");
+		JLabel l2 = new JLabel(frame.rb.getString("moves"));
 		l2.setFont(f);
 		l2.setHorizontalAlignment(SwingConstants.CENTER);
 		l2.setBounds(170, 550, 160, 30);
-		JLabel l3 = new JLabel("Score");
+		JLabel l3 = new JLabel(frame.rb.getString("score"));
 		l3.setFont(f);
 		l3.setHorizontalAlignment(SwingConstants.CENTER);
 		l3.setBounds(335, 550, 160, 30);
@@ -107,6 +108,7 @@ public class GamePanel extends JPanel {
 							frame.grid, frame.grid * b / c, frame.grid * b / c);
 					g.setColor(tile);
 				}
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 	public boolean unblockL(int i, int j) {
