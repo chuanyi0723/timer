@@ -1,7 +1,7 @@
 package test;
 
 public class StageSetting {
-	private int goalGrade;
+	private int goal;
 	private int initStep;
 	private int[] categories;
 	private int[][] mark = new int[9][9];
@@ -9,7 +9,7 @@ public class StageSetting {
 	StageSetting(int i) {
 		switch (i) {
 		case 0:
-			goalGrade = 8000;
+			goal = 8000;
 			initStep = 10;
 			categories = new int[] { 0, 1, 2 };
 			mark = new int[][] { { 0, 1, 1, 0, 0, 0, 1, 1, 0 },
@@ -23,7 +23,7 @@ public class StageSetting {
 					{ 0, 1, 1, 0, 0, 0, 1, 1, 0 } };
 			break;
 		case 1:
-			goalGrade = 9000;
+			goal = 9000;
 			initStep = 15;
 			categories = new int[] { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3 };
 			mark = new int[][] { { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -38,7 +38,7 @@ public class StageSetting {
 
 			break;
 		case 2:
-			goalGrade = 9000;
+			goal = 9000;
 			initStep = 30;
 			categories = new int[] { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4 };
 			mark = new int[][] { { 1, 1, 0, 1, 1, 1, 0, 1, 1 },
@@ -53,7 +53,7 @@ public class StageSetting {
 
 			break;
 		case 3:
-			goalGrade = 12000;
+			goal = 12000;
 			initStep = 30;
 			categories = new int[] { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4,
 					4, 5 };
@@ -65,8 +65,8 @@ public class StageSetting {
 		}
 	}
 
-	public int getGoalGrade() {
-		return goalGrade;
+	public int getGoal() {
+		return goal;
 	}
 
 	public int getInitStep() {
