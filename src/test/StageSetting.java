@@ -6,7 +6,7 @@ public class StageSetting {
 	private int[] categories;
 	private int[][] mark = new int[9][9];
 
-	StageSetting(int i) {
+	public StageSetting(int i) {
 		switch (i) {
 		case 0:
 			goal = 8000;
@@ -65,16 +65,16 @@ public class StageSetting {
 		}
 	}
 
+	public int[] getCategories() {
+		return categories;
+	}
+
 	public int getGoal() {
 		return goal;
 	}
 
 	public int getInitStep() {
 		return initStep;
-	}
-
-	public int[] getCategories() {
-		return categories;
 	}
 
 	public int[][] getMark() {

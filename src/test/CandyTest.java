@@ -1,18 +1,16 @@
 package test;
 
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class CandyTest extends JFrame {
-	ResourceBundle rb = ResourceBundle.getBundle("message");
-	HomePanel homePanel;
-	GamePanel gamePanel;
-
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				CandyTest f = new CandyTest();
 				f.setVisible(true);
@@ -20,8 +18,12 @@ public class CandyTest extends JFrame {
 		});
 	}
 
-	public CandyTest() {
-		setTitle("CandyTest");
+	GamePanel gamePanel;
+	HomePanel homePanel;
+	ResourceBundle rb = ResourceBundle.getBundle("message");
+
+	public CandyTest() throws HeadlessException {
+		super("CandyTest");
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 660);

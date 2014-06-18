@@ -23,6 +23,7 @@ public class HomePanel extends JPanel implements ActionListener {
 	private JButton btn4;
 
 	public HomePanel(CandyTest frame) {
+		super();
 		this.frame = frame;
 		setLayout(null);
 		icon = new JLabel();
