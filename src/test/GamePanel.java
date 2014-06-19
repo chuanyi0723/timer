@@ -450,11 +450,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					p2.y -= dy;
 					from.setLocation(p1);
 					to.setLocation(p2);
-					if (p2.x == x && p2.y == y)
+					if (p2.x == x && p2.y == y) {
 						timer.stop();
+						Candy.setMoving(false);
+					}
 				}
 			}
 		});
+		Candy.setMoving(true);
 		timer.start();
 	}
 
@@ -468,16 +471,16 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
 		if (step > 0 && !Candy.isMoving()) {
 			if (!Candy.isPress()) {
 				Candy.setPress(true);
-				prev = (Candy) arg0.getSource();
+				prev = (Candy) e.getSource();
 				prev.highlight();
 			} else {
 				Candy.setPress(false);
 				prev.repaint();
-				cur = (Candy) arg0.getSource();
+				cur = (Candy) e.getSource();
 				if (cur.isBehind(prev)) {
 					if (canSwap(cur, prev))
 						moveTo(cur, prev);
