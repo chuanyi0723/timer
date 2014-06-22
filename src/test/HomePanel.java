@@ -21,7 +21,8 @@ public class HomePanel extends JPanel implements ActionListener {
 	private JButton btn2;
 	private JButton btn3;
 	private JButton btn4;
-	private JButton debugBtn;
+
+	// private JButton debugBtn;
 
 	public HomePanel(CandyTest frame) {
 		super();
@@ -36,11 +37,11 @@ public class HomePanel extends JPanel implements ActionListener {
 		btn1.setBackground(Color.PINK);
 		btn1.addActionListener(this);
 		btn1.setActionCommand("newgame");
-		debugBtn = new JButton(frame.rb.getString("debug") + "off");
-		debugBtn.setBounds(315, 265, 160, 30);
-		debugBtn.setMnemonic(KeyEvent.VK_D);
-		debugBtn.addActionListener(this);
-		debugBtn.setActionCommand("debug");
+		// debugBtn = new JButton(frame.rb.getString("debug") + "off");
+		// debugBtn.setBounds(315, 265, 160, 30);
+		// debugBtn.setMnemonic(KeyEvent.VK_D);
+		// debugBtn.addActionListener(this);
+		// debugBtn.setActionCommand("debug");
 		btn2 = new JButton(frame.rb.getString("continue"));
 		btn2.setBounds(190, 300, 120, 30);
 		btn2.setEnabled(false);
@@ -62,7 +63,7 @@ public class HomePanel extends JPanel implements ActionListener {
 		btn4.setActionCommand("language");
 		add(icon);
 		add(btn1);
-		add(debugBtn);
+		// add(debugBtn);
 		add(btn2);
 		add(btn3);
 		add(btn4);
@@ -111,10 +112,10 @@ public class HomePanel extends JPanel implements ActionListener {
 				btn1.setText(frame.rb.getString("newgame"));
 				btn2.setText(frame.rb.getString("continue"));
 				btn3.setText(frame.rb.getString("exit"));
-				if (!frame.debug)
-					debugBtn.setText(frame.rb.getString("debug") + "off");
-				else
-					debugBtn.setText(frame.rb.getString("debug") + "on");
+				// if (frame.gamePanel.isDebug())
+				// debugBtn.setText(frame.rb.getString("debug") + "on");
+				// else
+				// debugBtn.setText(frame.rb.getString("debug") + "off");
 				frame.gamePanel.getStageLabel().setText(
 						frame.rb.getString("stage")
 								+ frame.gamePanel.getStage());
@@ -131,15 +132,15 @@ public class HomePanel extends JPanel implements ActionListener {
 						frame.rb.getString("score"));
 			}
 			break;
-		case "debug":
-			if (frame.debug) {
-				frame.debug = false;
-				debugBtn.setText(frame.rb.getString("debug") + "off");
-			} else {
-				frame.debug = true;
-				debugBtn.setText(frame.rb.getString("debug") + "on");
-			}
-			break;
+		// case "debug":
+		// if (frame.gamePanel.isDebug()) {
+		// frame.gamePanel.setDebug(false);
+		// debugBtn.setText(frame.rb.getString("debug") + "off");
+		// } else {
+		// frame.gamePanel.setDebug(true);
+		// debugBtn.setText(frame.rb.getString("debug") + "on");
+		// }
+		// break;
 		}
 	}
 }

@@ -10,7 +10,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -22,6 +24,7 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements ActionListener, MouseListener {
+	private boolean debug;
 	private CandyTest frame;
 	private final Color bg = new Color(238, 238, 238);
 	private final Color tile = new Color(128, 192, 128);
@@ -48,7 +51,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	private JLabel scoreText;
 	private JLabel scoreLabel;
 	private final int delay = 20;
-	private final int delta = T_GRID / 5;
+	private int fCount, maxK;
+	private final int delta = 5;
+	private final int deltaR = T_GRID / delta;
 	private Candy prev, cur;
 	private Timer timer;
 	// Candy swap variables
@@ -61,12 +66,11 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	private int dir;
 	// tile painting variables
 	// setting for T_GRID = 55
-	private final int arcB = 14; // must even
+	private final int arcB = 18; // must even
 	private final int arcC = 55; // T_GRID % c must be 0
 	private final int arcB2 = arcB / 2;
 	private final int arcA = arcC - arcB2;
-	@SuppressWarnings("unused")
-	private List<Candy> droplist = new ArrayList<Candy>();
+	private Map<Candy, Integer> fallSet;
 	@SuppressWarnings("unused")
 	private List<Point> pointlist = new ArrayList<Point>();
 	@SuppressWarnings("unused")
@@ -143,6 +147,58 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
+		case "addCandies":
+			fCount++;
+			for (Candy c : fallSet.keySet()) {
+				int k = fallSet.get(c);
+				if(fCount <= (maxK - k) * deltaR)
+					continue;
+				Point p = c.getLocation();
+				p.y+=delta;
+				c.setLocation(p);
+			}
+			if (fCount >= maxK * deltaR) {
+				timer.stop();
+				eliminate();
+			}
+			break;
+		case "fallDown":
+			fCount++;
+			for (Candy c : fallSet.keySet()) {
+				if (fCount > fallSet.get(c) * deltaR)
+					continue;
+				Point p = c.getLocation();
+				p.y += delta;
+				c.setLocation(p);
+			}
+			if (fCount >= maxK * deltaR) {
+				timer.stop();
+				addCandies();
+			}
+			break;
+		case "invalidMove":
+			if (dir == 0) {
+				p1.x -= dx;
+				p1.y -= dy;
+				p2.x += dx;
+				p2.y += dy;
+				from.setLocation(p1);
+				to.setLocation(p2);
+				if (p1.x == x && p1.y == y)
+					dir = 1;
+			} else {
+				p1.x += dx;
+				p1.y += dy;
+				p2.x -= dx;
+				p2.y -= dy;
+				from.setLocation(p1);
+				to.setLocation(p2);
+				if (p2.x == x && p2.y == y) {
+					timer.stop();
+					Candy.setMoving(false);
+				}
+			}
+			break;
 		case "sp":
 			if (Candy.isPress()) {
 				Candy.setPress(false);
@@ -155,7 +211,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 						if (prev.isSameType(getCandy(i, j)))
 							getCandy(i, j).setDel(true);
 					}
-				if (frame.debug)
+				if (debug)
 					JOptionPane
 							.showMessageDialog(null, "using sp",
 									"before eliminate",
@@ -165,11 +221,25 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 						if (getCandy(i, j).isDel())
 							remove(getCandy(i, j));
 				repaint();
-				if (frame.debug)
+				if (debug)
 					JOptionPane.showMessageDialog(null, "after eliminate",
 							"after eliminate", JOptionPane.INFORMATION_MESSAGE);
 				base = 1;
 				fall();
+			}
+			break;
+		case "swapMove":
+			p1.x -= dx;
+			p1.y -= dy;
+			p2.x += dx;
+			p2.y += dy;
+			from.setLocation(p1);
+			to.setLocation(p2);
+			if (p1.x == x && p1.y == y) {
+				timer.stop();
+				base = 1;
+				repaint();
+				eliminate();
 			}
 			break;
 		case "pause":
@@ -196,20 +266,22 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	}
 
 	private void addCandies() {
-		// TODO Animation
+		fCount = 0;
+		maxK = 0;
+		fallSet = new HashMap<Candy, Integer>();
 		for (int i = 0; i < T_WIDTH; i++)
 			for (int j = 0; j < T_HEIGHT; j++)
 				if (!hasCandy(i, j)) {
-					Candy c = new Candy(newCandy(), i, j);
+					Candy c = new Candy(newCandy(), i, -1);
 					add(c);
 					c.addMouseListener(this);
+					fallSet.put(c, j + 1);
+					if (j + 1 > maxK)
+						maxK = j + 1;
 				}
-		/*
-		 * timer = new Timer(delay, new ActionListener() { public void
-		 * actionPerformed(ActionEvent e) { timer.stop(); } }); timer.start();
-		 */
-		repaint();
-		eliminate();
+		timer = new Timer(delay / 2, this);
+		timer.setActionCommand("addCandies");
+		timer.start();
 	}
 
 	private boolean canSwap(Candy c1, Candy c2) {
@@ -326,7 +398,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				}
 			}
 		if (chain) {
-			if (frame.debug)
+			if (debug)
 				JOptionPane.showMessageDialog(null, "before eliminate",
 						"before eliminate", JOptionPane.INFORMATION_MESSAGE);
 			for (int i = 0; i < T_WIDTH; i++)
@@ -334,39 +406,47 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					if (getCandy(i, j).isDel())
 						remove(getCandy(i, j));
 			repaint();
-			if (frame.debug)
+			if (debug)
 				JOptionPane.showMessageDialog(null, "after eliminate, base = "
 						+ base, "after eliminate",
 						JOptionPane.INFORMATION_MESSAGE);
 			base++;
 			fall();
 		} else {
+			step--;
+			movesLabel.setText(String.valueOf(step));
+			if (step == 0)
+				stageEnd();
+			else if (!hasMove()) {
+				JOptionPane.showMessageDialog(frame,
+						frame.rb.getString("nomovemsg"));
+				shuffle();
+			}
 			Candy.setMoving(false);
 		}
 	}
 
 	private void fall() {
-		// TODO Animation
+		maxK = 0;
+		fallSet = new HashMap<Candy, Integer>();
 		for (int i = 0; i < T_WIDTH; i++)
 			for (int j = T_HEIGHT - 1; j >= 0; j--)
-				if (!hasCandy(i, j))
-					for (int k = j - 1; k >= 0; k--) {
-						if (hasCandy(i, k)) {
-							Candy c = getCandy(i, k);
-							if (!c.isBlock()) {
-								moveTo(c, i, j);
+				if (!hasCandy(i, j) || fallSet.get(getCandy(i, j)) != null)
+					for (int k = 1; k <= j; k++) {
+						if (hasCandy(i, j - k)) {
+							Candy c = getCandy(i, j - k);
+							if (!c.isBlock() && fallSet.get(c) == null) {
+								fallSet.put(c, k);
+								if (k > maxK)
+									maxK = k;
 								break;
 							}
 						}
 					}
-		/*
-		 * timer = new Timer(delay, new ActionListener() { public void
-		 * actionPerformed(ActionEvent e) { timer.stop(); } }); timer.start();
-		 */
-		if (frame.debug)
-			JOptionPane.showMessageDialog(null, "candies fall");
-		repaint();
-		addCandies();
+		fCount = 0;
+		timer = new Timer(delay / 2, this);
+		timer.setActionCommand("fallDown");
+		timer.start();
 	}
 
 	void gameStart() {
@@ -476,38 +556,17 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		p2 = c2.getLocation();
 		x = p2.x;
 		y = p2.y;
-		dx = (p1.x - p2.x) / delta;
-		dy = (p1.y - p2.y) / delta;
+		dx = (p1.x - p2.x) / deltaR;
+		dy = (p1.y - p2.y) / deltaR;
 		dir = 0;
-		timer = new Timer(delay, new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (dir == 0) {
-					p1.x -= dx;
-					p1.y -= dy;
-					p2.x += dx;
-					p2.y += dy;
-					from.setLocation(p1);
-					to.setLocation(p2);
-					if (p1.x == x && p1.y == y)
-						dir = 1;
-				} else {
-					p1.x += dx;
-					p1.y += dy;
-					p2.x -= dx;
-					p2.y -= dy;
-					from.setLocation(p1);
-					to.setLocation(p2);
-					if (p2.x == x && p2.y == y) {
-						timer.stop();
-						Candy.setMoving(false);
-					}
-				}
-			}
-		});
+		timer = new Timer(delay, this);
+		timer.setActionCommand("invalidMove");
 		Candy.setMoving(true);
 		timer.start();
+	}
+
+	public boolean isDebug() {
+		return debug;
 	}
 
 	void loadStage(int stage) {
@@ -563,40 +622,12 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		p2 = c2.getLocation();
 		x = p2.x;
 		y = p2.y;
-		dx = (p1.x - p2.x) / delta;
-		dy = (p1.y - p2.y) / delta;
-		timer = new Timer(delay, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				p1.x -= dx;
-				p1.y -= dy;
-				p2.x += dx;
-				p2.y += dy;
-				from.setLocation(p1);
-				to.setLocation(p2);
-				if (p1.x == x && p1.y == y) {
-					timer.stop();
-					base = 1;
-					repaint();
-					eliminate();
-					step--;
-					movesLabel.setText(String.valueOf(step));
-					if (step == 0)
-						stageEnd();
-					else if (!hasMove()) {
-						JOptionPane.showMessageDialog(frame,
-								frame.rb.getString("nomovemsg"));
-						shuffle();
-					}
-				}
-			}
-		});
+		dx = (p1.x - p2.x) / deltaR;
+		dy = (p1.y - p2.y) / deltaR;
+		timer = new Timer(delay, this);
+		timer.setActionCommand("swapMove");
 		Candy.setMoving(true);
 		timer.start();
-	}
-
-	private void moveTo(Candy c, int i, int j) {
-		c.setLocation(T_GRID * i, T_GRID * j);
 	}
 
 	private int newCandy() {
@@ -692,6 +723,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		if (unblockR(i, j) && unblockRU(i, j) && unblockU(i, j))
 			g.fillRect(i * T_GRID + T_GRID * arcA / arcC, j * T_GRID, T_GRID
 					* arcB2 / arcC, T_GRID * arcB2 / arcC);
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 	public void setSpTime(int spTime) {
@@ -839,7 +874,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 								if (hasCandy(i, k)) {
 									Candy c = getCandy(i, k);
 									if (!c.isBlock()) {
-										moveTo(c, i, j);
+										c.setLocation(T_GRID * i, T_GRID * j);
 										break;
 									}
 								}
