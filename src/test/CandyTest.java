@@ -11,7 +11,6 @@ public class CandyTest extends JFrame {
 		f.setVisible(true);
 	}
 
-	boolean debug;
 	GamePanel gamePanel;
 	HomePanel homePanel;
 	ResourceBundle rb = ResourceBundle.getBundle("message");
