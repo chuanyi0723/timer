@@ -21,6 +21,7 @@ public class HomePanel extends JPanel implements ActionListener {
 	private JButton btn2;
 	private JButton btn3;
 	private JButton btn4;
+	private JButton debugBtn;
 
 	public HomePanel(CandyTest frame) {
 		super();
@@ -35,6 +36,11 @@ public class HomePanel extends JPanel implements ActionListener {
 		btn1.setBackground(Color.PINK);
 		btn1.addActionListener(this);
 		btn1.setActionCommand("newgame");
+		debugBtn = new JButton(frame.rb.getString("debug") + "off");
+		debugBtn.setBounds(315, 265, 160, 30);
+		debugBtn.setMnemonic(KeyEvent.VK_D);
+		debugBtn.addActionListener(this);
+		debugBtn.setActionCommand("debug");
 		btn2 = new JButton(frame.rb.getString("continue"));
 		btn2.setBounds(190, 300, 120, 30);
 		btn2.setEnabled(false);
@@ -56,6 +62,7 @@ public class HomePanel extends JPanel implements ActionListener {
 		btn4.setActionCommand("language");
 		add(icon);
 		add(btn1);
+		add(debugBtn);
 		add(btn2);
 		add(btn3);
 		add(btn4);
@@ -69,6 +76,7 @@ public class HomePanel extends JPanel implements ActionListener {
 			btn2.setEnabled(true);
 			frame.add(frame.gamePanel);
 			frame.gamePanel.loadStage(0);
+			frame.gamePanel.setSpTime(3);
 			frame.gamePanel.gameStart();
 			frame.repaint();
 			break;
@@ -103,9 +111,17 @@ public class HomePanel extends JPanel implements ActionListener {
 				btn1.setText(frame.rb.getString("newgame"));
 				btn2.setText(frame.rb.getString("continue"));
 				btn3.setText(frame.rb.getString("exit"));
+				if (!frame.debug)
+					debugBtn.setText(frame.rb.getString("debug") + "off");
+				else
+					debugBtn.setText(frame.rb.getString("debug") + "on");
 				frame.gamePanel.getStageLabel().setText(
 						frame.rb.getString("stage")
 								+ frame.gamePanel.getStage());
+				frame.gamePanel.getBtn1().setText(
+						frame.rb.getString("sp") + frame.gamePanel.getSpTime());
+				frame.gamePanel.getBtn1().setToolTipText(
+						frame.rb.getString("sptip"));
 				frame.gamePanel.getBtn2().setText(frame.rb.getString("pause"));
 				frame.gamePanel.getGoalText().setText(
 						frame.rb.getString("target"));
@@ -113,6 +129,15 @@ public class HomePanel extends JPanel implements ActionListener {
 						frame.rb.getString("moves"));
 				frame.gamePanel.getScoreText().setText(
 						frame.rb.getString("score"));
+			}
+			break;
+		case "debug":
+			if (frame.debug) {
+				frame.debug = false;
+				debugBtn.setText(frame.rb.getString("debug") + "off");
+			} else {
+				frame.debug = true;
+				debugBtn.setText(frame.rb.getString("debug") + "on");
 			}
 			break;
 		}

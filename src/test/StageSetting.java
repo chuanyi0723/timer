@@ -4,7 +4,7 @@ public class StageSetting {
 	private int goal;
 	private int initStep;
 	private int[] categories;
-	private int[][] mark = new int[9][9];
+	private int[][] mark;
 
 	public StageSetting(int i) {
 		switch (i) {
@@ -57,6 +57,7 @@ public class StageSetting {
 			initStep = 30;
 			categories = new int[] { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4,
 					4, 5 };
+			mark = new int[9][9];
 			for (int k = 0; k < 9; k++) {
 				for (int j = 0; j < 9; j++)
 					mark[k][j] = 1;

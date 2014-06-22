@@ -22,9 +22,8 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements ActionListener, MouseListener {
-	private final boolean debug = false; // track candy eliminate & fall down
 	private CandyTest frame;
-	private final Color bg = new Color(224, 224, 224);
+	private final Color bg = new Color(238, 238, 238);
 	private final Color tile = new Color(128, 192, 128);
 	private final int T_WIDTH = 9;
 	private final int T_HEIGHT = 9;
@@ -39,7 +38,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	private int[] categories;
 	private int[][] mark;
 	private JLabel stageLabel;
-	// private JButton btn1;
+	private int spTime, oldSpTime;
+	private JButton btn1; // button for special
 	private JButton btn2;
 	private JLabel goalText;
 	private JLabel goalLabel;
@@ -61,11 +61,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	private int dir;
 	// tile painting variables
 	// setting for T_GRID = 55
-	private final int arcB = 6; // must even
-	private final int arcC = 11; // T_GRID % c must be 0
+	private final int arcB = 14; // must even
+	private final int arcC = 55; // T_GRID % c must be 0
 	private final int arcB2 = arcB / 2;
 	private final int arcA = arcC - arcB2;
-
 	@SuppressWarnings("unused")
 	private List<Candy> droplist = new ArrayList<Candy>();
 	@SuppressWarnings("unused")
@@ -74,6 +73,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	private int len;
 
 	public GamePanel(CandyTest frame) {
+		this(frame, 0);
+	}
+
+	public GamePanel(CandyTest frame, int startStage) {
 		super();
 		this.frame = frame;
 		setLayout(null);
@@ -81,12 +84,20 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		Font f1 = new Font("Arial", Font.BOLD, 24);
 		Font f2 = new Font("Arial", Font.BOLD, 16);
 		Candy.setGrid(T_GRID);
-		loadStage(0);
+		loadStage(startStage);
 		stageLabel = new JLabel(frame.rb.getString("stage") + stage);
 		stageLabel.setFont(f1);
 		stageLabel.setBounds(5, 510, 160, 30);
 		stageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		// btn1 = new JButton(frame.rb.getString(""));
+		spTime = 3;
+		btn1 = new JButton(frame.rb.getString("sp") + spTime);
+		btn1.setToolTipText(frame.rb.getString("sptip"));
+		btn1.setBounds(170, 510, 160, 30);
+		btn1.setForeground(Color.WHITE);
+		btn1.setBackground(Color.BLACK);
+		btn1.setMnemonic(KeyEvent.VK_S);
+		btn1.addActionListener(this);
+		btn1.setActionCommand("sp");
 		btn2 = new JButton(frame.rb.getString("pause"));
 		btn2.setBounds(375, 510, 80, 30);
 		btn2.setForeground(Color.WHITE);
@@ -119,7 +130,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		scoreLabel.setBounds(335, 590, 160, 30);
 		scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		add(stageLabel);
-		// add(btn1);
+		add(btn1);
 		add(btn2);
 		add(goalText);
 		add(goalLabel);
@@ -133,7 +144,33 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
 		case "sp":
-			// for btn1
+			if (Candy.isPress()) {
+				Candy.setPress(false);
+				spTime--;
+				btn1.setText(frame.rb.getString("sp") + spTime);
+				if (spTime == 0)
+					btn1.setEnabled(false);
+				for (int i = 0; i < T_WIDTH; i++)
+					for (int j = 0; j < T_HEIGHT; j++) {
+						if (prev.isSameType(getCandy(i, j)))
+							getCandy(i, j).setDel(true);
+					}
+				if (frame.debug)
+					JOptionPane
+							.showMessageDialog(null, "using sp",
+									"before eliminate",
+									JOptionPane.INFORMATION_MESSAGE);
+				for (int i = 0; i < T_WIDTH; i++)
+					for (int j = 0; j < T_HEIGHT; j++)
+						if (getCandy(i, j).isDel())
+							remove(getCandy(i, j));
+				repaint();
+				if (frame.debug)
+					JOptionPane.showMessageDialog(null, "after eliminate",
+							"after eliminate", JOptionPane.INFORMATION_MESSAGE);
+				base = 1;
+				fall();
+			}
 			break;
 		case "pause":
 			String[] options = { frame.rb.getString("resume"),
@@ -144,9 +181,12 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					frame.rb.getString("pause"), JOptionPane.DEFAULT_OPTION,
 					JOptionPane.PLAIN_MESSAGE, null, options, options[2]);
 			if (choose == 0) {
-			} else if (choose == 1)
+			} else if (choose == 1) {
+				spTime = oldSpTime;
+				btn1.setText(frame.rb.getString("sp") + spTime);
+				btn1.setEnabled(true);
 				gameStart();
-			else if (choose == 2) {
+			} else if (choose == 2) {
 				frame.remove(frame.gamePanel);
 				frame.add(frame.homePanel);
 				frame.homePanel.repaint();
@@ -286,17 +326,17 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				}
 			}
 		if (chain) {
-			if (debug)
-				JOptionPane.showMessageDialog(null, base, "before eliminate",
-						JOptionPane.INFORMATION_MESSAGE);
+			if (frame.debug)
+				JOptionPane.showMessageDialog(null, "before eliminate",
+						"before eliminate", JOptionPane.INFORMATION_MESSAGE);
 			for (int i = 0; i < T_WIDTH; i++)
 				for (int j = 0; j < T_HEIGHT; j++)
 					if (getCandy(i, j).isDel())
 						remove(getCandy(i, j));
-			System.gc();
 			repaint();
-			if (debug)
-				JOptionPane.showMessageDialog(null, base, "after eliminate",
+			if (frame.debug)
+				JOptionPane.showMessageDialog(null, "after eliminate, base = "
+						+ base, "after eliminate",
 						JOptionPane.INFORMATION_MESSAGE);
 			base++;
 			fall();
@@ -323,13 +363,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		 * timer = new Timer(delay, new ActionListener() { public void
 		 * actionPerformed(ActionEvent e) { timer.stop(); } }); timer.start();
 		 */
-		if (debug)
+		if (frame.debug)
 			JOptionPane.showMessageDialog(null, "candies fall");
 		repaint();
 		addCandies();
 	}
 
 	void gameStart() {
+		oldSpTime = spTime;
 		Candy.setPress(false);
 		do {
 			for (int i = 0; i < T_WIDTH; i++)
@@ -357,6 +398,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		repaint();
 	}
 
+	public JButton getBtn1() {
+		return btn1;
+	}
+
 	public JButton getBtn2() {
 		return btn2;
 	}
@@ -378,6 +423,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
 	public JLabel getScoreText() {
 		return scoreText;
+	}
+
+	public int getSpTime() {
+		return spTime;
 	}
 
 	public int getStage() {
@@ -622,31 +671,37 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	}
 
 	private void paintLD(Graphics g, int i, int j) {
-		if (unblockL(i, j) && unblockD(i, j))
+		if (unblockD(i, j) && unblockL(i, j) && unblockLD(i, j))
 			g.fillRect(i * T_GRID, j * T_GRID + T_GRID * arcA / arcC, T_GRID
 					* arcB2 / arcC, T_GRID * arcB2 / arcC);
 	}
 
 	private void paintLU(Graphics g, int i, int j) {
-		if (unblockL(i, j) && unblockU(i, j))
+		if (unblockL(i, j) && unblockLU(i, j) && unblockU(i, j))
 			g.fillRect(i * T_GRID, j * T_GRID, T_GRID * arcB2 / arcC, T_GRID
 					* arcB2 / arcC);
 	}
 
 	private void paintRD(Graphics g, int i, int j) {
-		if (unblockR(i, j) && unblockD(i, j))
+		if (unblockD(i, j) && unblockR(i, j) && unblockRD(i, j))
 			g.fillRect(i * T_GRID + T_GRID * arcA / arcC, j * T_GRID + T_GRID
 					* arcA / arcC, T_GRID * arcB2 / arcC, T_GRID * arcB2 / arcC);
 	}
 
 	private void paintRU(Graphics g, int i, int j) {
-		if (unblockR(i, j) && unblockU(i, j))
+		if (unblockR(i, j) && unblockRU(i, j) && unblockU(i, j))
 			g.fillRect(i * T_GRID + T_GRID * arcA / arcC, j * T_GRID, T_GRID
 					* arcB2 / arcC, T_GRID * arcB2 / arcC);
 	}
 
+	public void setSpTime(int spTime) {
+		this.spTime = spTime;
+		btn1.setText(frame.rb.getString("sp") + spTime);
+		if (spTime > 0)
+			btn1.setEnabled(true);
+	}
+
 	private void shuffle() {
-		// TODO Auto-generated method stub
 		Random rand = new Random();
 		int wh = T_WIDTH * T_HEIGHT;
 		while (!hasMove()) {
@@ -675,8 +730,12 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				loadStage(stage + 1);
 			else
 				stage++;
-			if (stage <= finalStage)
+			if (stage <= finalStage) {
+				spTime += 1;
+				btn1.setText(frame.rb.getString("sp") + spTime);
+				btn1.setEnabled(true);
 				gameStart();
+			}
 		} else {
 			msg = new JLabel(frame.rb.getString("failedmsg"));
 			msg.setHorizontalAlignment(SwingConstants.CENTER);
@@ -685,10 +744,16 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 					JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
 			switch (choose) {
 			case JOptionPane.YES_OPTION:
+				spTime = oldSpTime;
+				btn1.setText(frame.rb.getString("sp") + spTime);
+				btn1.setEnabled(true);
 				gameStart();
 				break;
 			case JOptionPane.NO_OPTION:
 				frame.remove(frame.gamePanel);
+				spTime = oldSpTime;
+				btn1.setText(frame.rb.getString("sp") + spTime);
+				btn1.setEnabled(true);
 				gameStart();
 				frame.add(frame.homePanel);
 				frame.homePanel.repaint();
@@ -799,8 +864,24 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		return mark[j][i - 1] == 1;
 	}
 
+	private boolean unblockLD(int i, int j) {
+		return mark[j + 1][i - 1] == 1;
+	}
+
+	private boolean unblockLU(int i, int j) {
+		return mark[j - 1][i - 1] == 1;
+	}
+
 	private boolean unblockR(int i, int j) {
 		return mark[j][i + 1] == 1;
+	}
+
+	private boolean unblockRD(int i, int j) {
+		return mark[j + 1][i + 1] == 1;
+	}
+
+	private boolean unblockRU(int i, int j) {
+		return mark[j - 1][i + 1] == 1;
 	}
 
 	private boolean unblockU(int i, int j) {
