@@ -21,7 +21,7 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
-public class GamePanel extends JPanel implements ActionListener, MouseListener {
+public class GamePanel extends JPanel implements ActionListener {
 	private boolean debug;
 	private CandyTest parent;
 	private final Color bg = new Color(238, 238, 238);
@@ -253,7 +253,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 				if (!hasCandy(i, j)) {
 					Candy c = new Candy(newCandy(), i, -1);
 					add(c);
-					c.addMouseListener(this);
+					c.addMouseListener(new ClickedListener(this));
 					fallSet.put(c, j + 1);
 					if (j + 1 > maxK)
 						maxK = j + 1;
@@ -263,7 +263,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		timer.start();
 	}
 
-	private boolean canSwap(Candy c1, Candy c2) {
+	public boolean canSwap(Candy c1, Candy c2) {
 		if (c1.isBlock() || c2.isBlock())
 			return false;
 		Candy ctmp1, ctmp2;
@@ -525,7 +525,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		return false;
 	}
 
-	private void invalidMove(Candy c1, Candy c2) {
+	public void invalidMove(Candy c1, Candy c2) {
 		from = c1;
 		to = c2;
 		p1 = c1.getLocation();
@@ -554,44 +554,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 		initStep = s.getInitStep();
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		if (step > 0 && !Candy.isMoving()) {
-			if (!Candy.isPress()) {
-				Candy.setPress(true);
-				prev = (Candy) e.getSource();
-				prev.highlight();
-			} else {
-				Candy.setPress(false);
-				prev.repaint();
-				cur = (Candy) e.getSource();
-				if (cur.isBehind(prev)) {
-					if (canSwap(cur, prev))
-						moveTo(cur, prev);
-					else
-						invalidMove(cur, prev);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-	}
-
-	private void moveTo(Candy c1, Candy c2) {
+	public void moveTo(Candy c1, Candy c2) {
 		from = c1;
 		to = c2;
 		p1 = c1.getLocation();
@@ -616,7 +579,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 	/** add new Candy at position (i, j) */
 	private void newCandy(int i, int j) {
 		Candy c = new Candy(newCandy(), i, j);
-		c.addMouseListener(this);
+		c.addMouseListener(new ClickedListener(this));
 		add(c);
 	}
 
@@ -909,5 +872,25 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
 	private boolean unblockU(int i, int j) {
 		return mark[j - 1][i] == 1;
+	}
+
+	public int getStep() {
+		return step;
+	}
+
+	public void setPrev(Candy prev) {
+		this.prev = prev;
+	}
+
+	public Candy getPrev() {
+		return prev;
+	}
+
+	public Candy getCur() {
+		return cur;
+	}
+
+	public void setCur(Candy cur) {
+		this.cur = cur;
 	}
 }
