@@ -7,6 +7,9 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -20,7 +23,7 @@ import javax.swing.Timer;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements ActionListener {
-	private boolean debug;
+	private boolean debug, record;
 	private CandyTest parent;
 	private final Color bg = new Color(238, 238, 238);
 	private final Color tile = new Color(128, 192, 128);
@@ -710,6 +713,17 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	private void stageEnd() {
+		if (record) { // record score after the end of game
+			PrintWriter pw = null;
+			try {
+				pw = new PrintWriter(new FileOutputStream("record.csv", true));
+				pw.println(stage + "," + score + "," + (oldSpTime - spTime));
+			} catch (IOException e) {
+			} finally {
+				if (pw != null)
+					pw.close();
+			}
+		}
 		JLabel msg;
 		if (score >= goal) {
 			msg = new JLabel(parent.rb.getString("clearmsg") + score);
