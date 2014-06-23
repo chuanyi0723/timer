@@ -53,15 +53,29 @@ public class StageSetting {
 
 			break;
 		case 3:
+			goal = 10000;
+			initStep = 30;
+			categories = new int[] { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4,
+					4, 5 };
+			mark = new int[][] { { 0, 1, 1, 1, 1, 1, 1, 1, 0 },
+					{ 1, 0, 1, 1, 1, 1, 1, 0, 1 },
+					{ 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+					{ 1, 1, 1, 0, 1, 0, 1, 1, 1 },
+					{ 1, 1, 1, 1, 0, 1, 1, 1, 1 },
+					{ 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+					{ 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+					{ 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+					{ 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+			break;
+		case 4:
 			goal = 12000;
 			initStep = 30;
 			categories = new int[] { 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4,
 					4, 5 };
 			mark = new int[9][9];
-			for (int k = 0; k < 9; k++) {
-				for (int j = 0; j < 9; j++)
-					mark[k][j] = 1;
-			}
+			for (int j = 0; j < 9; j++)
+				for (int k = 0; k < 9; k++)
+					mark[j][k] = 1;
 			break;
 		}
 	}

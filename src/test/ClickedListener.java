@@ -18,14 +18,13 @@ public class ClickedListener implements MouseListener {
 		if (parent.getStep() > 0 && !Candy.isMoving()) {
 			if (!Candy.isPress()) {
 				Candy.setPress(true);
-				parent.setPrev((Candy) arg0.getSource());
-				from = parent.getPrev();
+				from = (Candy) arg0.getSource();
+				parent.setPrev(from);
 				from.highlight();
 			} else {
 				Candy.setPress(false);
 				from.repaint();
-				parent.setCur((Candy) arg0.getSource());
-				to = parent.getCur();
+				to = (Candy) arg0.getSource();
 				if (to.isBehind(from)) {
 					if (parent.canSwap(from, to))
 						parent.moveTo(from, to);

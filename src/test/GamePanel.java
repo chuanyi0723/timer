@@ -7,8 +7,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -29,7 +27,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	private final int T_WIDTH = 9;
 	private final int T_HEIGHT = 9;
 	private final int T_GRID = 55;
-	private final int finalStage = 3;
+	private final int finalStage = 4;
 	private int stage, goal, initStep, step, score, base;
 	private int[] categories;
 	private int[][] mark;
@@ -37,10 +35,11 @@ public class GamePanel extends JPanel implements ActionListener {
 	private JButton btn1, btn2;
 	private JLabel stageLabel, goalText, goalLabel, movesText, movesLabel,
 			scoreText, scoreLabel;
-	private final int delay = 20;
+	private final int delay = 15;
+	private final int delayF = 8;
 	private final int delta = 5;
 	private final int deltaR = T_GRID / delta;
-	private Candy prev, cur;
+	private Candy prev;
 	private Timer timer;
 	// Candy swap variables
 	private Candy from, to;
@@ -55,11 +54,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	private final int arcA = arcC - arcB2;
 	private Map<Candy, Integer> fallSet;
 
-	public GamePanel(CandyTest frame) {
-		this(frame, 0);
-	}
-
-	public GamePanel(CandyTest parent, int startStage) {
+	public GamePanel(CandyTest parent) {
 		super();
 		this.parent = parent;
 		setLayout(null);
@@ -67,7 +62,6 @@ public class GamePanel extends JPanel implements ActionListener {
 		Font f1 = new Font("Arial", Font.BOLD, 24);
 		Font f2 = new Font("Arial", Font.BOLD, 16);
 		Candy.setGrid(T_GRID);
-		loadStage(startStage);
 		stageLabel = new JLabel(parent.rb.getString("stage") + stage);
 		stageLabel.setFont(f1);
 		stageLabel.setBounds(5, 510, 160, 30);
@@ -258,7 +252,7 @@ public class GamePanel extends JPanel implements ActionListener {
 					if (j + 1 > maxK)
 						maxK = j + 1;
 				}
-		timer = new Timer(delay / 2, this);
+		timer = new Timer(delayF, this);
 		timer.setActionCommand("addCandies");
 		timer.start();
 	}
@@ -423,7 +417,7 @@ public class GamePanel extends JPanel implements ActionListener {
 						}
 					}
 		fCount = 0;
-		timer = new Timer(delay / 2, this);
+		timer = new Timer(delayF, this);
 		timer.setActionCommand("fallDown");
 		timer.start();
 	}
@@ -493,6 +487,10 @@ public class GamePanel extends JPanel implements ActionListener {
 		return stageLabel;
 	}
 
+	public int getStep() {
+		return step;
+	}
+
 	public int getT_GRID() {
 		return T_GRID;
 	}
@@ -554,6 +552,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		initStep = s.getInitStep();
 	}
 
+	/** Swap two Candies */
 	public void moveTo(Candy c1, Candy c2) {
 		from = c1;
 		to = c2;
@@ -569,6 +568,11 @@ public class GamePanel extends JPanel implements ActionListener {
 		timer.start();
 	}
 
+	/** add block Candy at (i, j) */
+	private void newBlock(int i, int j) {
+		add(new Candy(-1, i, j));
+	}
+
 	/** Generate a random type of Candy */
 	private int newCandy() {
 		Random rand = new Random();
@@ -581,11 +585,6 @@ public class GamePanel extends JPanel implements ActionListener {
 		Candy c = new Candy(newCandy(), i, j);
 		c.addMouseListener(new ClickedListener(this));
 		add(c);
-	}
-
-	/** add block Candy at (i, j) */
-	private void newBlock(int i, int j) {
-		add(new Candy(-1, i, j));
 	}
 
 	@Override
@@ -681,6 +680,10 @@ public class GamePanel extends JPanel implements ActionListener {
 		this.debug = debug;
 	}
 
+	public void setPrev(Candy prev) {
+		this.prev = prev;
+	}
+
 	public void setSpTime(int spTime) {
 		this.spTime = spTime;
 		btn1.setText(parent.rb.getString("sp") + spTime);
@@ -724,6 +727,8 @@ public class GamePanel extends JPanel implements ActionListener {
 				btn1.setText(parent.rb.getString("sp") + spTime);
 				btn1.setEnabled(true);
 				gameStart();
+			} else {
+				JOptionPane.showMessageDialog(parent, "All Clear!!!");
 			}
 		} else {
 			msg = new JLabel(parent.rb.getString("failedmsg"));
@@ -872,25 +877,5 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	private boolean unblockU(int i, int j) {
 		return mark[j - 1][i] == 1;
-	}
-
-	public int getStep() {
-		return step;
-	}
-
-	public void setPrev(Candy prev) {
-		this.prev = prev;
-	}
-
-	public Candy getPrev() {
-		return prev;
-	}
-
-	public Candy getCur() {
-		return cur;
-	}
-
-	public void setCur(Candy cur) {
-		this.cur = cur;
 	}
 }
