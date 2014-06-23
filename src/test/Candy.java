@@ -50,24 +50,29 @@ public class Candy extends JLabel {
 		setBounds(x * grid, y * grid, grid, grid);
 	}
 
+	/** draw Candy */
 	public void draw(Graphics g, int type) {
 		polygon.reset();
 		switch (type) {
 		case 0:
+			// square
 			g.fillRect((int) (grid * 0.2), (int) (grid * 0.2),
 					(int) (grid * 0.6), (int) (grid * 0.6));
 			break;
 		case 1:
+			// circle
 			g.fillOval((int) (grid * 0.2), (int) (grid * 0.2),
 					(int) (grid * 0.6), (int) (grid * 0.6));
 			break;
 		case 2:
+			// triangle
 			polygon.addPoint((int) (grid * 0.5), (int) (grid * 0.2));
 			polygon.addPoint((int) (grid * 0.15), (int) (grid * 0.8));
 			polygon.addPoint((int) (grid * 0.85), (int) (grid * 0.8));
 			g.fillPolygon(polygon);
 			break;
 		case 3:
+			// hexagon
 			polygon.addPoint((int) (grid * 0.3), (int) (grid * 0.15));
 			polygon.addPoint((int) (grid * 0.7), (int) (grid * 0.15));
 			polygon.addPoint((int) (grid * 0.9), (int) (grid * 0.5));
@@ -77,33 +82,32 @@ public class Candy extends JLabel {
 			g.fillPolygon(polygon);
 			break;
 		case 4:
-			polygon.addPoint((int) (grid * 0.5), (int) (grid * 0.15));
-			polygon.addPoint((int) (grid * 0.6), (int) (grid * 0.35));
-			polygon.addPoint((int) (grid * 0.9), (int) (grid * 0.35));
-			polygon.addPoint((int) (grid * 0.7), (int) (grid * 0.58));
-			polygon.addPoint((int) (grid * 0.8), (int) (grid * 0.85));
-			polygon.addPoint((int) (grid * 0.5), (int) (grid * 0.75));
-			polygon.addPoint((int) (grid * 0.2), (int) (grid * 0.85));
-			polygon.addPoint((int) (grid * 0.3), (int) (grid * 0.58));
-			polygon.addPoint((int) (grid * 0.1), (int) (grid * 0.35));
-			polygon.addPoint((int) (grid * 0.4), (int) (grid * 0.35));
+			// star
+			polygon.addPoint((int) (grid * 0.5), (int) (grid * 0.14));
+			polygon.addPoint((int) (grid * 0.59), (int) (grid * 0.42));
+			polygon.addPoint((int) (grid * 0.88), (int) (grid * 0.42));
+			polygon.addPoint((int) (grid * 0.64), (int) (grid * 0.59));
+			polygon.addPoint((int) (grid * 0.73), (int) (grid * 0.86));
+			polygon.addPoint((int) (grid * 0.5), (int) (grid * 0.7));
+			polygon.addPoint((int) (grid * 0.27), (int) (grid * 0.86));
+			polygon.addPoint((int) (grid * 0.36), (int) (grid * 0.59));
+			polygon.addPoint((int) (grid * 0.12), (int) (grid * 0.42));
+			polygon.addPoint((int) (grid * 0.41), (int) (grid * 0.42));
 			g.fillPolygon(polygon);
 			break;
 		case 5:
-			polygon.addPoint((int) (grid * 0.5), (int) (grid * 0.15));
-			polygon.addPoint((int) (grid * 0.9), (int) (grid * 0.35));
-			polygon.addPoint((int) (grid * 0.8), (int) (grid * 0.85));
-			polygon.addPoint((int) (grid * 0.2), (int) (grid * 0.85));
-			polygon.addPoint((int) (grid * 0.1), (int) (grid * 0.35));
+			// pentagon
+			polygon.addPoint((int) (grid * 0.5), (int) (grid * 0.14));
+			polygon.addPoint((int) (grid * 0.88), (int) (grid * 0.42));
+			polygon.addPoint((int) (grid * 0.73), (int) (grid * 0.86));
+			polygon.addPoint((int) (grid * 0.27), (int) (grid * 0.86));
+			polygon.addPoint((int) (grid * 0.12), (int) (grid * 0.42));
 			g.fillPolygon(polygon);
 			break;
 		}
 	}
 
-	public int getType() {
-		return type;
-	}
-
+	/** highlight selected Candy */
 	public void highlight() {
 		Graphics g = getGraphics();
 		g.setColor(Color.RED);

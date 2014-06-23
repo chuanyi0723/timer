@@ -178,6 +178,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		case "sp":
 			if (Candy.isPress()) {
 				Candy.setPress(false);
+				Candy.setMoving(true);
 				spTime--;
 				btn1.setText(parent.rb.getString("sp") + spTime);
 				if (spTime == 0)
@@ -233,7 +234,7 @@ public class GamePanel extends JPanel implements ActionListener {
 				btn1.setEnabled(true);
 				gameStart();
 			} else if (choose == 2) {
-				parent.remove(parent.gamePanel);
+				parent.remove(this);
 				parent.add(parent.homePanel);
 				parent.homePanel.repaint();
 			}
@@ -743,6 +744,10 @@ public class GamePanel extends JPanel implements ActionListener {
 				gameStart();
 			} else {
 				JOptionPane.showMessageDialog(parent, "All Clear!!!");
+				parent.homePanel.getBtn2().setEnabled(false);
+				parent.remove(this);
+				parent.add(parent.homePanel);
+				parent.repaint();
 			}
 		} else {
 			msg = new JLabel(parent.rb.getString("failedmsg"));
@@ -758,7 +763,7 @@ public class GamePanel extends JPanel implements ActionListener {
 				gameStart();
 				break;
 			case JOptionPane.NO_OPTION:
-				parent.remove(parent.gamePanel);
+				parent.remove(this);
 				spTime = oldSpTime;
 				btn1.setText(parent.rb.getString("sp") + spTime);
 				btn1.setEnabled(true);

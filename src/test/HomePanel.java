@@ -17,9 +17,8 @@ import javax.swing.JPanel;
 public class HomePanel extends JPanel implements ActionListener {
 	private CandyTest parent;
 	private JButton btn1, btn2, btn3, btn4;
-	private JLabel icon;
-
 	// private JButton debugBtn;
+	private JLabel icon;
 
 	public HomePanel(CandyTest parent) {
 		super();
@@ -70,7 +69,7 @@ public class HomePanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
 		case "newgame":
-			parent.remove(parent.homePanel);
+			parent.remove(this);
 			btn2.setEnabled(true);
 			parent.add(parent.gamePanel);
 			parent.gamePanel.loadStage(1);
@@ -79,7 +78,7 @@ public class HomePanel extends JPanel implements ActionListener {
 			parent.repaint();
 			break;
 		case "continue":
-			parent.remove(parent.homePanel);
+			parent.remove(this);
 			parent.add(parent.gamePanel);
 			parent.repaint();
 			break;
@@ -141,5 +140,9 @@ public class HomePanel extends JPanel implements ActionListener {
 		// }
 		// break;
 		}
+	}
+
+	public JButton getBtn2() {
+		return btn2;
 	}
 }
